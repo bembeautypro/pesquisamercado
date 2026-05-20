@@ -3,892 +3,965 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Defesa Ação Renovatória</title>
+    <title>Defesa — Ação Renovatória | Ferreira Borges, 42</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         :root {
-            --primary: #254C5A;
-            --primary-light: #3A6B7D;
-            --accent: #9D4916;
-            --success: #10b981;
-            --warning: #ef4444;
-            --info: #3b82f6;
-            --bg-light: #f8fafc;
-            --bg-white: #ffffff;
-            --text-dark: #1a202c;
-            --text-gray: #64748b;
+            --primary: #1e3a4a;
+            --primary-light: #2d5a72;
+            --accent: #b45309;
+            --success: #059669;
+            --danger: #dc2626;
+            --info: #2563eb;
+            --bg: #f1f5f9;
+            --white: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
             --border: #e2e8f0;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
         }
 
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
+        html, body { height: 100%; width: 100%; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
             overflow-x: hidden;
         }
 
-        /* Header */
+        /* ── HEADER ── */
         header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: var(--bg-white);
-            padding: 1.5rem 1rem;
+            color: var(--white);
+            padding: 1.25rem 1rem 1rem;
             text-align: center;
-            box-shadow: var(--shadow-md);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 200;
+            box-shadow: var(--shadow-lg);
         }
+        header h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.3px; }
+        header p  { font-size: 0.78rem; opacity: 0.85; margin-top: 0.2rem; }
 
-        header h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-            letter-spacing: -0.5px;
-        }
-
-        header p {
-            font-size: 0.85rem;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-
-        /* Navigation */
+        /* ── NAV ── */
         nav {
-            background: var(--bg-white);
-            border-bottom: 1px solid var(--border);
+            background: var(--white);
+            border-bottom: 2px solid var(--border);
             position: sticky;
-            top: 4.5rem;
-            z-index: 99;
+            top: 4.2rem;
+            z-index: 199;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            box-shadow: var(--shadow-sm);
+            scrollbar-width: none;
         }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 0;
-            padding: 0;
-            min-width: min-content;
-        }
-
+        nav::-webkit-scrollbar { display: none; }
+        nav ul { list-style: none; display: flex; min-width: max-content; }
         nav button {
             background: none;
             border: none;
-            padding: 0.9rem 1rem;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-gray);
             border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
+            padding: 0.85rem 1rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
             white-space: nowrap;
-            flex-shrink: 0;
+            transition: all 0.2s;
         }
+        nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+        nav button:active { background: var(--bg); }
 
-        nav button:active {
-            background-color: var(--bg-light);
-        }
+        /* ── SECTIONS ── */
+        .container { max-width: 900px; margin: 0 auto; padding: 0; }
+        section { display: none; padding: 1rem; animation: fadeIn 0.25s ease; }
+        section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        nav button.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0;
-        }
-
-        /* Sections */
-        section {
-            display: none;
-            animation: fadeIn 0.3s ease;
-            padding: 1rem;
-            min-height: calc(100vh - 9rem);
-        }
-
-        section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cards */
+        /* ── CARDS ── */
         .card {
-            background: var(--bg-white);
-            border-radius: 12px;
-            padding: 1.2rem;
+            background: var(--white);
+            border-radius: 14px;
+            padding: 1.25rem;
             margin-bottom: 1rem;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow);
             border-left: 4px solid var(--accent);
         }
+        .card h2 { font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; }
+        .card h3 { font-size: 0.95rem; font-weight: 700; color: var(--primary-light); margin: 1.2rem 0 0.5rem; }
+        .card p  { font-size: 0.92rem; color: var(--muted); margin-bottom: 0.75rem; line-height: 1.7; }
+        .card ul { margin-left: 1.2rem; margin-bottom: 0.75rem; }
+        .card li { font-size: 0.92rem; color: var(--muted); margin-bottom: 0.35rem; line-height: 1.6; }
+        .card li strong { color: var(--text); }
 
-        .card h2 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        .card h3 {
-            font-size: 1rem;
-            margin: 1.2rem 0 0.6rem 0;
-            color: var(--primary-light);
-            font-weight: 600;
-        }
-
-        .card p {
-            margin-bottom: 0.8rem;
-            font-size: 0.95rem;
-            line-height: 1.7;
-            color: var(--text-gray);
-        }
-
-        .card ul {
-            margin-left: 1.2rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .card li {
-            margin-bottom: 0.4rem;
-            font-size: 0.95rem;
-            color: var(--text-gray);
-        }
-
-        /* Metrics Grid */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
-            margin: 1.2rem 0;
-        }
-
-        @media (min-width: 768px) {
-            .metrics-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
+        /* ── METRICS ── */
+        .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin: 1rem 0; }
+        @media (min-width: 600px) { .metrics-grid { grid-template-columns: repeat(4, 1fr); } }
         .metric {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: var(--bg-white);
-            padding: 1rem;
+            color: var(--white);
+            padding: 1rem 0.75rem;
             border-radius: 10px;
             text-align: center;
-            box-shadow: var(--shadow-sm);
         }
+        .metric-value { font-size: 1.25rem; font-weight: 800; word-break: break-word; }
+        .metric-label { font-size: 0.72rem; opacity: 0.88; margin-top: 0.2rem; font-weight: 500; }
 
-        .metric-value {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 0.2rem;
-            word-break: break-word;
+        .metrics-grid-3 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin: 1rem 0; }
+        @media (min-width: 600px) { .metrics-grid-3 { grid-template-columns: repeat(3, 1fr); } }
+
+        /* ── HIGHLIGHTS ── */
+        .hl {
+            border-radius: 10px;
+            padding: 0.9rem 1rem;
+            margin: 0.85rem 0;
+            font-size: 0.92rem;
+            line-height: 1.65;
         }
+        .hl-green  { background: rgba(5,150,105,0.08); border-left: 4px solid var(--success); }
+        .hl-red    { background: rgba(220,38,38,0.08); border-left: 4px solid var(--danger); }
+        .hl-blue   { background: rgba(37,99,235,0.08); border-left: 4px solid var(--info); }
+        .hl-amber  { background: rgba(180,83,9,0.08);  border-left: 4px solid var(--accent); }
+        .hl strong { color: var(--text); font-weight: 700; }
 
-        .metric-label {
-            font-size: 0.75rem;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-
-        /* Highlights */
-        .highlight {
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .highlight-positive {
-            background-color: rgba(16, 185, 129, 0.1);
-            border-left: 4px solid var(--success);
-            color: var(--text-dark);
-        }
-
-        .highlight-warning {
-            background-color: rgba(239, 68, 68, 0.1);
-            border-left: 4px solid var(--warning);
-            color: var(--text-dark);
-        }
-
-        .highlight-info {
-            background-color: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid var(--info);
-            color: var(--text-dark);
-        }
-
-        .highlight strong {
-            color: var(--text-dark);
-            font-weight: 600;
-        }
-
-        /* Tables */
-        .table-wrapper {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 1rem 0;
-            border-radius: 8px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        table thead {
-            background-color: var(--primary);
-            color: var(--bg-white);
-        }
-
-        table th {
-            padding: 0.8rem;
-            text-align: left;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        table td {
-            padding: 0.8rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        table tbody tr:hover {
-            background-color: var(--bg-light);
-        }
-
+        /* ── TABLES ── */
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0.75rem 0; border-radius: 10px; box-shadow: var(--shadow); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        table thead { background: var(--primary); color: var(--white); }
+        table th { padding: 0.75rem 0.8rem; text-align: left; font-weight: 600; white-space: nowrap; }
+        table td { padding: 0.7rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        table tbody tr:last-child td { border-bottom: none; }
+        table tbody tr:hover { background: var(--bg); }
         table a {
             color: var(--info);
             text-decoration: none;
             font-weight: 600;
-            display: inline-block;
-            padding: 0.3rem 0.6rem;
-            background: rgba(59, 130, 246, 0.1);
+            padding: 0.25rem 0.5rem;
+            background: rgba(37,99,235,0.08);
             border-radius: 4px;
+            display: inline-block;
+            white-space: nowrap;
         }
-
-        table a:active {
-            background: rgba(59, 130, 246, 0.2);
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
+        .badge-green { background: rgba(5,150,105,0.12); color: var(--success); }
+        .badge-red   { background: rgba(220,38,38,0.12); color: var(--danger); }
 
-        /* Chart Container */
-        #chartContainer {
-            background: var(--bg-white);
-            border-radius: 12px;
-            padding: 0.8rem;
-            margin: 1rem 0;
-            box-shadow: var(--shadow-sm);
-        }
+        /* ── CHART ── */
+        #chartContainer { background: var(--white); border-radius: 12px; padding: 0.5rem; margin: 0.75rem 0; box-shadow: var(--shadow); }
 
-        /* Map Container */
-        #mapContainer {
-            background: var(--bg-white);
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 1rem 0;
-            box-shadow: var(--shadow-md);
-            height: 500px;
-            position: relative;
-        }
+        /* ── MAP ── */
+        #mapContainer { border-radius: 12px; overflow: hidden; height: 420px; box-shadow: var(--shadow-lg); margin: 0.75rem 0; }
+        @media (min-width: 600px) { #mapContainer { height: 520px; } }
 
-        .map-controls {
-            position: absolute;
-            bottom: 1rem;
-            left: 1rem;
-            right: 1rem;
-            z-index: 10;
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
+        .map-btns { display: flex; gap: 0.5rem; margin: 0.75rem 0; flex-wrap: wrap; }
         .map-btn {
-            background: var(--bg-white);
-            border: 1px solid var(--border);
-            padding: 0.6rem 1rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--primary);
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            transition: all 0.2s ease;
             flex: 1;
-            min-width: 100px;
-        }
-
-        .map-btn:active {
-            background: var(--bg-light);
-            transform: scale(0.95);
-        }
-
-        .map-btn.active {
-            background: var(--primary);
-            color: var(--bg-white);
-        }
-
-        .property-list {
-            background: var(--bg-white);
-            border-radius: 12px;
-            padding: 1rem;
-            margin: 1rem 0;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .property-item {
-            padding: 0.8rem;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-        }
-
-        .property-item:last-child {
-            border-bottom: none;
-        }
-
-        .property-item:active {
-            background: var(--bg-light);
-            transform: scale(0.98);
-        }
-
-        .property-name {
+            min-width: 120px;
+            background: var(--white);
+            border: 1.5px solid var(--border);
+            padding: 0.65rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--primary);
-            font-size: 0.95rem;
-            margin-bottom: 0.3rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+        .map-btn.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
+        .map-btn:active { transform: scale(0.97); }
+
+        .prop-list { margin: 0.75rem 0; }
+        .prop-item {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            border-left: 3px solid var(--info);
+            transition: all 0.2s;
+        }
+        .prop-item.main-prop { border-left-color: var(--success); }
+        .prop-item:active { transform: scale(0.98); background: var(--bg); }
+        .prop-name { font-weight: 700; color: var(--primary); font-size: 0.92rem; }
+        .prop-info { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+
+        /* ── NUMBERED LIST ── */
+        .num-list { counter-reset: item; list-style: none; margin-left: 0; }
+        .num-list li {
+            counter-increment: item;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.92rem;
+            color: var(--muted);
+        }
+        .num-list li:last-child { border-bottom: none; }
+        .num-list li::before {
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            top: 0.75rem;
+            background: var(--accent);
+            color: var(--white);
+            width: 1.6rem;
+            height: 1.6rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
 
-        .property-info {
-            font-size: 0.85rem;
-            color: var(--text-gray);
+        /* ── QUOTE ── */
+        blockquote {
+            border-left: 3px solid var(--accent);
+            padding: 0.75rem 1rem;
+            margin: 0.75rem 0;
+            background: rgba(180,83,9,0.05);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--muted);
         }
 
-        /* Footer */
+        /* ── FOOTER ── */
         footer {
             background: var(--primary);
-            color: var(--bg-white);
+            color: var(--white);
             text-align: center;
             padding: 1.5rem 1rem;
-            margin-top: 2rem;
-            font-size: 0.85rem;
-            line-height: 1.6;
+            margin-top: 1.5rem;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            opacity: 0.95;
         }
 
-        footer p {
-            margin-bottom: 0.5rem;
-        }
-
-        /* Responsive */
+        /* ── RESPONSIVE ── */
         @media (max-width: 480px) {
-            header h1 {
-                font-size: 1.2rem;
-            }
-
-            header p {
-                font-size: 0.8rem;
-            }
-
-            section {
-                padding: 0.8rem;
-            }
-
-            .card {
-                padding: 1rem;
-                margin-bottom: 0.8rem;
-            }
-
-            .card h2 {
-                font-size: 1.1rem;
-            }
-
-            .card h3 {
-                font-size: 0.95rem;
-            }
-
-            .metric-value {
-                font-size: 1.2rem;
-            }
-
-            #mapContainer {
-                height: 350px;
-            }
-
-            .map-controls {
-                bottom: 0.8rem;
-                left: 0.8rem;
-                right: 0.8rem;
-            }
-
-            .map-btn {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.8rem;
-            }
-
-            table {
-                font-size: 0.8rem;
-            }
-
-            table th, table td {
-                padding: 0.6rem;
-            }
-
-            nav button {
-                padding: 0.8rem 0.9rem;
-                font-size: 0.8rem;
-            }
-        }
-
-        /* Accessibility */
-        button:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-
-        a:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
+            header h1 { font-size: 1rem; }
+            section { padding: 0.75rem; }
+            .card { padding: 1rem; }
+            .card h2 { font-size: 1.05rem; }
+            .metric-value { font-size: 1.1rem; }
+            table { font-size: 0.82rem; }
+            table th, table td { padding: 0.6rem; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>⚖️ Defesa - Ação Renovatória</h1>
-        <p>Rua Ferreira Borges, 42 | Campo Grande - RJ</p>
-    </header>
 
-    <nav>
-        <ul>
-            <li><button class="nav-btn active" data-section="resumo">Resumo</button></li>
-            <li><button class="nav-btn" data-section="diagnostico">Situação</button></li>
-            <li><button class="nav-btn" data-section="laudo">Laudo</button></li>
-            <li><button class="nav-btn" data-section="mercado">Mercado</button></li>
-            <li><button class="nav-btn" data-section="mapa">Mapa</button></li>
-            <li><button class="nav-btn" data-section="defesa">Defesa</button></li>
-        </ul>
-    </nav>
+<header>
+    <h1>⚖️ Defesa — Ação Renovatória</h1>
+    <p>Rua Ferreira Borges, 42 · Campo Grande · RJ · Maio 2026</p>
+</header>
 
-    <div class="container">
-        <!-- RESUMO -->
-        <section id="resumo" class="active">
-            <div class="card">
-                <h2>📊 Resumo Executivo</h2>
-                <div class="metrics-grid">
-                    <div class="metric">
-                        <div class="metric-value">1.543</div>
-                        <div class="metric-label">Área (m²)</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">R$ 91.485</div>
-                        <div class="metric-label">Seu Aluguel</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">R$ 59,29</div>
-                        <div class="metric-label">R$/m² Atual</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">47,7%</div>
-                        <div class="metric-label">Desconto</div>
-                    </div>
-                </div>
+<nav>
+    <ul>
+        <li><button class="nav-btn active" data-section="resumo">Resumo</button></li>
+        <li><button class="nav-btn" data-section="situacao">Situação</button></li>
+        <li><button class="nav-btn" data-section="laudo">Laudo</button></li>
+        <li><button class="nav-btn" data-section="mercado">Mercado</button></li>
+        <li><button class="nav-btn" data-section="mapa">Mapa</button></li>
+        <li><button class="nav-btn" data-section="defesa">Defesa</button></li>
+        <li><button class="nav-btn" data-section="conclusao">Conclusão</button></li>
+    </ul>
+</nav>
 
-                <div class="highlight highlight-positive">
-                    <strong>✅ Posição Extraordinária:</strong> Você cobra <strong>47,7% ABAIXO</strong> da média de mercado (R$ 113,32/m²). O laudo do inquilino é viciado.
-                </div>
+<div class="container">
 
-                <h3>Dados Principais</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td><strong>Aluguel Atual</strong></td>
-                                <td>R$ 91.485,00</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Proposta (Laudo)</strong></td>
-                                <td>R$ 23.200,00</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Redução Pretendida</strong></td>
-                                <td>74,6%</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Média de Mercado</strong></td>
-                                <td>R$ 113,32/m²</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Evolução 2016-2026</strong></td>
-                                <td>+52,5%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+<!-- ══════════════════════════════════════════
+     1. RESUMO EXECUTIVO
+══════════════════════════════════════════ -->
+<section id="resumo" class="active">
+    <div class="card">
+        <h2>📊 Resumo Executivo</h2>
+
+        <div class="metrics-grid">
+            <div class="metric">
+                <div class="metric-value">1.543 m²</div>
+                <div class="metric-label">Área Real (Escritura)</div>
             </div>
-        </section>
-
-        <!-- DIAGNÓSTICO -->
-        <section id="diagnostico">
-            <div class="card">
-                <h2>🎯 Diagnóstico da Situação</h2>
-                
-                <p>O inquilino (Parco Comércio e Serviços Ltda) ajuizou Ação Renovatória pleiteando reduzir o aluguel de R$ 91.485,00 para R$ 23.200,00 (redução de 74,6%).</p>
-
-                <h3>Ponto Central</h3>
-                <ul>
-                    <li><strong>Aluguel Atual:</strong> R$ 91.485,00 (R$ 59,29/m²)</li>
-                    <li><strong>Proposta do Inquilino:</strong> R$ 23.200,00 (R$ 15,04/m²)</li>
-                    <li><strong>Fundamentação:</strong> Laudo pericial da FTC Perícias (agosto/2025)</li>
-                </ul>
-
-                <div class="highlight highlight-warning">
-                    <strong>⚠️ Crítico:</strong> O laudo contém erros primários e manipulação de dados que o tornam indefensável.
-                </div>
-
-                <h3>Contexto Histórico</h3>
-                <p>Em 2016, as partes acordaram em R$ 60.000,00. A evolução para R$ 91.485,00 (+52,5% em 10 anos) é absolutamente razoável e justificável pela inflação.</p>
+            <div class="metric">
+                <div class="metric-value">R$ 91.485</div>
+                <div class="metric-label">Seu Aluguel Atual</div>
             </div>
-        </section>
-
-        <!-- ANÁLISE DO LAUDO -->
-        <section id="laudo">
-            <div class="card">
-                <h2>🔍 Análise Crítica do Laudo</h2>
-
-                <h3>❌ Erro 1: Redução de Área (CRÍTICO)</h3>
-                <div class="highlight highlight-warning">
-                    <strong>Área Real:</strong> 1.543 m² (escritura)<br>
-                    <strong>Área no Laudo:</strong> 1.093 m²<br>
-                    <strong>Redução Indevida:</strong> 29,2%
-                </div>
-                <p>O perito reduziu artificialmente a área do imóvel. Como o aluguel é proporcional à área, isso "puxa" o valor final para baixo de forma injustificada.</p>
-
-                <h3>❌ Erro 2: Amostra Viciada</h3>
-                <p>Apenas 9 imóveis (mínimo aceitável), com seleção tendenciosa de imóveis depreciados. Nossa pesquisa com 8 imóveis de qualidade aponta R$ 113,32/m² como média real.</p>
-
-                <h3>❌ Erro 3: Redutor Arbitrário</h3>
-                <p>Após calcular R$ 25.780,00, o perito aplicou 10% de "margem de negociação" sem base técnica, chegando em R$ 23.200,00. Isso é subjetivo e não segue NBR 14.653.</p>
-
-                <h3>❌ Erro 4: Contradição Econômica</h3>
-                <p>Um imóvel que valia R$ 60.000,00 em 2016 não pode valer R$ 23.200,00 em 2026. Isso seria desvalorização de 61,3%, absurda para um ponto prime.</p>
+            <div class="metric">
+                <div class="metric-value">R$ 59,29</div>
+                <div class="metric-label">R$/m² Atual</div>
             </div>
-        </section>
-
-        <!-- MERCADO -->
-        <section id="mercado">
-            <div class="card">
-                <h2>📈 Pesquisa de Mercado</h2>
-
-                <div class="highlight highlight-positive">
-                    <strong>✅ Conclusão:</strong> Você cobra R$ 59,29/m² enquanto o mercado está em R$ 113,32/m². Desconto de 47,7%.
-                </div>
-
-                <h3>8 Imóveis Pesquisados</h3>
-                <div class="metrics-grid">
-                    <div class="metric">
-                        <div class="metric-value">8</div>
-                        <div class="metric-label">Total</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">1.000m²</div>
-                        <div class="metric-label">Maior</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">178m²</div>
-                        <div class="metric-label">Menor</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">R$ 113,32</div>
-                        <div class="metric-label">Média/m²</div>
-                    </div>
-                </div>
-
-                <h3>Imóveis com Links Verificados</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Endereço</th>
-                                <th>Área</th>
-                                <th>R$/m²</th>
-                                <th>Link</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Rua Ferreira Borges, 36</td>
-                                <td>1.000m²</td>
-                                <td>R$ 70,00</td>
-                                <td><a href="https://www.instagram.com/p/DIRZcr1o0J4/" target="_blank">Ver</a></td>
-                            </tr>
-                            <tr>
-                                <td>Rua Ferreira Borges, 62</td>
-                                <td>507m²</td>
-                                <td>R$ 59,17</td>
-                                <td><a href="https://www.instagram.com/reel/DOHUI5akm5Z/" target="_blank">Ver</a></td>
-                            </tr>
-                            <tr>
-                                <td>Av. Cesário de Melo, 2437</td>
-                                <td>500m²</td>
-                                <td>R$ 70,00</td>
-                                <td><a href="https://www.sampaioimoveis.com.br/imovel/aluguel+loja+campo-grande+rio-de-janeiro+rj+500m2+rs35000/S0LJ8342" target="_blank">Ver</a></td>
-                            </tr>
-                            <tr>
-                                <td>Rua Coronel Agostinho, s/n</td>
-                                <td>270m²</td>
-                                <td>R$ 159,26</td>
-                                <td><a href="https://www.chavesnamao.com.br/imovel/ponto-comercial-para-alugar-rj-rio-de-janeiro-campo-grande-RS43000/id-36391744/" target="_blank">Ver</a></td>
-                            </tr>
-                            <tr>
-                                <td>Rua Aurélio Figueiredo, 00</td>
-                                <td>390m²</td>
-                                <td>R$ 70,51</td>
-                                <td><a href="https://www.chavesnamao.com.br/imovel/ponto-comercial-para-alugar-rj-rio-de-janeiro-campo-grande-390m2-RS27500/id-32778596/" target="_blank">Ver</a></td>
-                            </tr>
-                            <tr>
-                                <td>Rua Coronel Agostinho, 142</td>
-                                <td>178m²</td>
-                                <td>R$ 269,66</td>
-                                <td><a href="https://www.chavesnamao.com.br/imovel/ponto-comercial-para-alugar-rj-rio-de-janeiro-campo-grande-RS48000/id-38861541/" target="_blank">Ver</a></td>
-                            </tr>
-                            <tr>
-                                <td>Rua Viúva Dantas, 35</td>
-                                <td>210m²</td>
-                                <td>R$ 85,71</td>
-                                <td><a href="https://www.chavesnamao.com.br/imovel/ponto-comercial-para-alugar-rj-rio-de-janeiro-campo-grande-RS18000/id-15614663/" target="_blank">Ver</a></td>
-                            </tr>
-                            <tr>
-                                <td>Rua Viúva Dantas, s/n</td>
-                                <td>180m²</td>
-                                <td>R$ 122,22</td>
-                                <td><a href="https://www.sampaioimoveis.com.br/imovel/aluguel+loja+campo-grande+rio-de-janeiro+rj+180m2+rs22000/S0LJ8347" target="_blank">Ver</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3>Gráfico Comparativo</h3>
-                <div id="chartContainer"></div>
+            <div class="metric">
+                <div class="metric-value">47,7%</div>
+                <div class="metric-label">Desconto vs. Mercado</div>
             </div>
-        </section>
+        </div>
 
-        <!-- MAPA -->
-        <section id="mapa">
-            <div class="card">
-                <h2>🗺️ Localização dos Imóveis</h2>
-                <p style="margin-bottom: 1rem;">Clique nos imóveis para ver detalhes. Use os botões abaixo para navegar.</p>
-                
-                <div id="mapContainer"></div>
-                
-                <div class="map-controls">
-                    <button class="map-btn active" onclick="focusProperty('main')">📍 Seu Imóvel</button>
-                    <button class="map-btn" onclick="focusProperty('all')">🗺️ Todos</button>
-                </div>
+        <div class="hl hl-green">
+            <strong>✅ Posição Extraordinária:</strong> Você cobra <strong>47,7% ABAIXO</strong> da média de mercado (R$ 113,32/m²). O laudo do inquilino é viciado e manipulado.
+        </div>
 
-                <h3 style="margin-top: 1.5rem;">Imóveis Próximos</h3>
-                <div class="property-list" id="propertyList"></div>
-            </div>
-        </section>
+        <h3>Quadro Comparativo Completo</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Métrica</th><th>Valor</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Área Real (Escritura)</strong></td><td>1.543 m²</td></tr>
+                    <tr><td><strong>Aluguel Atual</strong></td><td>R$ 91.485,00</td></tr>
+                    <tr><td><strong>R$/m² Atual</strong></td><td>R$ 59,29</td></tr>
+                    <tr><td><strong>Aluguel Proposto (Laudo FTC)</strong></td><td>R$ 23.200,00</td></tr>
+                    <tr><td><strong>R$/m² Proposto</strong></td><td>R$ 15,04</td></tr>
+                    <tr><td><strong>Redução Pretendida</strong></td><td><span class="badge badge-red">74,6%</span></td></tr>
+                    <tr><td><strong>Média de Mercado (8 imóveis)</strong></td><td>R$ 113,32/m²</td></tr>
+                    <tr><td><strong>Seu Desconto vs. Mercado</strong></td><td><span class="badge badge-green">47,7% ABAIXO</span></td></tr>
+                    <tr><td><strong>Aluguel 2016 (Acordo Judicial)</strong></td><td>R$ 60.000,00</td></tr>
+                    <tr><td><strong>Evolução 2016–2026</strong></td><td>+52,5% (razoável)</td></tr>
+                    <tr><td><strong>Erro no Laudo — Área</strong></td><td><span class="badge badge-red">−29,2% (1.543 → 1.093 m²)</span></td></tr>
+                    <tr><td><strong>Aluguel Justo pela Média</strong></td><td>R$ 174.849,50</td></tr>
+                </tbody>
+            </table>
+        </div>
 
-        <!-- DEFESA -->
-        <section id="defesa">
-            <div class="card">
-                <h2>⚖️ Estratégia de Defesa</h2>
-
-                <h3>1️⃣ Impugnação do Laudo FTC</h3>
-                <p>Requerer desconsideração total do laudo apontando: erro na área (29,2%), amostra viciada (9 imóveis), redutor arbitrário (10% sem base).</p>
-
-                <h3>2️⃣ Pesquisa de Mercado Própria</h3>
-                <p>Apresentar pesquisa com 8 imóveis de qualidade, comprovando média real de R$ 113,32/m².</p>
-
-                <h3>3️⃣ Valor Justo Comprovado</h3>
-                <p>Demonstrar que R$ 59,29/m² está 47,7% ABAIXO do mercado. Proprietário concede desconto extraordinário.</p>
-
-                <h3>4️⃣ Histórico 2016</h3>
-                <p>Usar acordo de R$ 60.000,00 em 2016 como piso. Evolução de +52,5% em 10 anos é razoável e defensável.</p>
-
-                <h3>5️⃣ Fundamentação Legal</h3>
-                <p><strong>Lei do Inquilinato (Art. 72):</strong> Aluguel deve ser fixado conforme valor de mercado. Seu aluguel está abaixo do mercado.</p>
-
-                <div class="highlight highlight-positive" style="margin-top: 1.5rem;">
-                    <strong>💪 Conclusão:</strong> A defesa tem elementos técnicos e fáticos extremamente robustos para manter o valor atual ou até pleitear aumento.
-                </div>
-            </div>
-        </section>
+        <div class="hl hl-red">
+            <strong>⚠️ O que o inquilino quer:</strong> Reduzir de R$ 91.485 para R$ 23.200 — uma queda de 74,6% baseada em laudo com erro primário de área.
+        </div>
     </div>
+</section>
 
-    <footer>
-        <p><strong>Documento Preparado:</strong> Maio de 2026</p>
-        <p><strong>Objetivo:</strong> Fundamentar defesa na Ação Renovatória</p>
-        <p style="margin-top: 0.8rem; opacity: 0.9;">Apresente com a cópia da escritura e pesquisa de mercado completa.</p>
-    </footer>
+<!-- ══════════════════════════════════════════
+     2. SITUAÇÃO
+══════════════════════════════════════════ -->
+<section id="situacao">
+    <div class="card">
+        <h2>🎯 Diagnóstico da Situação</h2>
 
-    <script>
-        // Navigation
-        const navButtons = document.querySelectorAll('.nav-btn');
-        const sections = document.querySelectorAll('section');
+        <p>O inquilino <strong>Parco Comércio e Serviços Ltda (Caçula)</strong> ajuizou Ação Renovatória pleiteando a renovação do contrato de locação do imóvel situado na <strong>Rua Ferreira Borges, 42, Campo Grande – RJ</strong>, com redução drástica do aluguel.</p>
 
-        navButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetSection = button.dataset.section;
-                
-                navButtons.forEach(btn => btn.classList.remove('active'));
-                sections.forEach(sec => sec.classList.remove('active'));
-                
-                button.classList.add('active');
-                document.getElementById(targetSection).classList.add('active');
-                
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
+        <h3>Ponto Central da Controvérsia</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Parte</th><th>Valor Pretendido</th><th>R$/m²</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Proprietário (Você)</strong></td>
+                        <td>R$ 91.485,00</td>
+                        <td><span class="badge badge-green">R$ 59,29/m²</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inquilino (Laudo FTC)</strong></td>
+                        <td>R$ 23.200,00</td>
+                        <td><span class="badge badge-red">R$ 15,04/m²</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Média de Mercado</strong></td>
+                        <td>R$ 174.849,50</td>
+                        <td><strong>R$ 113,32/m²</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        // Chart
-        const imoveis = [
-            {nome: "Rua Ferreira Borges, 36", preco_m2: 70.00},
-            {nome: "Rua Ferreira Borges, 62", preco_m2: 59.17},
-            {nome: "Av. Cesário de Melo, 2437", preco_m2: 70.00},
-            {nome: "Rua Coronel Agostinho, s/n", preco_m2: 159.26},
-            {nome: "Rua Aurélio Figueiredo, 00", preco_m2: 70.51},
-            {nome: "Rua Coronel Agostinho, 142", preco_m2: 269.66},
-            {nome: "Rua Viúva Dantas, 35", preco_m2: 85.71},
-            {nome: "Rua Viúva Dantas, s/n", preco_m2: 122.22}
-        ];
+        <div class="hl hl-red">
+            <strong>⚠️ Crítico:</strong> O laudo pericial da FTC Perícias (Eng. Joelson Zuchen e Eng. Amanda Costa, agosto/2025) contém erros metodológicos graves e manipulação de dados que o tornam indefensável.
+        </div>
 
-        const nomes = imoveis.map(i => i.nome.substring(0, 20));
-        const precos = imoveis.map(i => i.preco_m2);
-        const media = 113.32;
-        const seu_imovel = 59.29;
+        <h3>Contexto Histórico — Acordo de 2016</h3>
+        <p>Em 2016, as partes firmaram acordo judicial na ação renovatória anterior (<strong>Processo 0007881-68.2015.8.19.0205</strong>), fixando o aluguel em <strong>R$ 60.000,00</strong>.</p>
+        <div class="metrics-grid-3">
+            <div class="metric">
+                <div class="metric-value">R$ 60.000</div>
+                <div class="metric-label">Aluguel em 2016</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">R$ 91.485</div>
+                <div class="metric-label">Aluguel em 2026</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">+52,5%</div>
+                <div class="metric-label">Evolução em 10 anos</div>
+            </div>
+        </div>
+        <p>Esta evolução de <strong>+52,5% em 10 anos</strong> (≈ 4,3% ao ano) é absolutamente razoável e está em linha com a inflação acumulada (IPCA/IGP-M) e a valorização natural da região.</p>
 
-        const colors = precos.map(p => p > media ? '#ef4444' : '#3b82f6');
+        <h3>Partes do Processo</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Papel</th><th>Parte</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Proprietário / Réu</strong></td><td>Paolo Giovanni Amendola</td></tr>
+                    <tr><td><strong>Inquilino / Autor</strong></td><td>Parco Comércio e Serviços Ltda (Caçula)</td></tr>
+                    <tr><td><strong>Perito do Inquilino</strong></td><td>FTC Perícias — Eng. Joelson Zuchen e Eng. Amanda Costa</td></tr>
+                    <tr><td><strong>Data do Laudo</strong></td><td>Agosto de 2025</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
-        const trace = {
-            x: nomes,
-            y: precos,
-            type: 'bar',
-            marker: {color: colors, line: {color: '#1f2937', width: 1}},
-            text: precos.map(p => `R$ ${p.toFixed(2)}`),
-            textposition: 'outside',
-            hovertemplate: '<b>%{x}</b><br>R$ %{y:.2f}/m²<extra></extra>'
-        };
+<!-- ══════════════════════════════════════════
+     3. ANÁLISE DO LAUDO
+══════════════════════════════════════════ -->
+<section id="laudo">
+    <div class="card">
+        <h2>🔍 Análise Crítica do Laudo FTC</h2>
 
-        const layout = {
-            title: '<b>Comparativo R$/m²</b>',
-            xaxis: {tickangle: -45},
-            yaxis: {title: 'R$/m²', gridcolor: '#e5e7eb'},
-            margin: {b: 100, l: 60, r: 40, t: 60},
-            plot_bgcolor: '#f8fafc',
-            paper_bgcolor: '#ffffff',
-            font: {family: 'Arial, sans-serif', size: 10},
-            hovermode: 'x unified'
-        };
+        <div class="hl hl-red">
+            <strong>Conclusão Antecipada:</strong> O laudo contém 4 erros graves e independentes. Qualquer um deles, isoladamente, seria suficiente para impugná-lo. Juntos, tornam o laudo indefensável.
+        </div>
 
-        Plotly.newPlot('chartContainer', [trace], layout, {responsive: true});
+        <h3>❌ Erro 1 — Redução de Área (CRÍTICO E INSANÁVEL)</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Dado</th><th>Valor</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Área Real (Escritura)</strong></td><td>1.543 m²</td></tr>
+                    <tr><td><strong>Área Utilizada no Laudo</strong></td><td>1.093 m² ("área equivalente")</td></tr>
+                    <tr><td><strong>Redução Indevida</strong></td><td><span class="badge badge-red">−29,2% (450 m² a menos)</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p>O perito reduziu artificialmente a área do imóvel em <strong>29,2%</strong>. Como o valor do aluguel é diretamente proporcional à área, essa redução injustificada "puxa" o valor final para baixo de forma ilegítima.</p>
+        <div class="hl hl-amber">
+            <strong>Argumento Devastador:</strong> O perito avaliou um imóvel que não corresponde à realidade física da locação. Juntar a escritura comprovando 1.543 m² destrói toda a credibilidade do laudo. Este é um vício insanável.
+        </div>
 
-        // Map
-        const map = L.map('mapContainer').setView([-22.9019611, -43.5573585], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap',
-            maxZoom: 19
+        <h3>❌ Erro 2 — Amostra Viciada (Cherry-picking)</h3>
+        <p>O laudo utilizou apenas <strong>9 imóveis</strong> — o mínimo aceitável pela NBR 14.653 — e a qualidade dessa amostra é altamente questionável para um imóvel do porte de 1.543 m².</p>
+        <ul>
+            <li><strong>Mistura incompatível:</strong> A amostra combina imóveis de rua com imóveis de shopping/centro comercial, com características muito distintas.</li>
+            <li><strong>Metragens incompatíveis:</strong> Inclui imóveis de 507 m² a 2.576 m², sem critério de homogeneidade.</li>
+            <li><strong>Localização:</strong> O imóvel avaliado é um ponto "prime" (Caçula, Rua Ferreira Borges). A amostra inclui imóveis em ruas de menor fluxo comercial.</li>
+            <li><strong>Nossa pesquisa independente</strong> com 8 imóveis de qualidade aponta <strong>R$ 113,32/m²</strong> como média real — 7,5x acima do valor proposto pelo laudo.</li>
+        </ul>
+        <div class="hl hl-red">
+            <strong>Conclusão:</strong> A amostra é tendenciosa. O perito selecionou imóveis com valor de metro quadrado muito inferior à média real da região para forçar um resultado baixo em benefício do contratante (inquilino).
+        </div>
+
+        <h3>❌ Erro 3 — Redutor Arbitrário ("Canetada")</h3>
+        <p>Após o modelo estatístico calcular o valor de <strong>R$ 25.780,00</strong>, o perito aplicou um desconto adicional:</p>
+        <blockquote>
+            "Porém como se trata de anúncios que carecem de negociação consideramos uma margem de negociação 10%. Desta forma, atribuímos o valor de locação atual de R$ 23.200,00."
+        </blockquote>
+        <div class="hl hl-red">
+            <strong>Argumento de Defesa:</strong> A aplicação de um redutor de 10% sobre o valor estatístico final é subjetiva e sem embasamento técnico rigoroso na NBR 14.653. O modelo estatístico já deve prever as variações de mercado. Reduzir o valor "na canetada" demonstra a intenção clara de chegar ao menor valor possível para beneficiar o contratante.
+        </div>
+
+        <h3>❌ Erro 4 — Contradição Econômica Absurda</h3>
+        <p>Em 2016, as partes acordaram em <strong>R$ 60.000,00</strong>. O laudo propõe <strong>R$ 23.200,00</strong> em 2026.</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Cenário</th><th>Valor</th><th>Variação</th></tr></thead>
+                <tbody>
+                    <tr><td>Aluguel em 2016</td><td>R$ 60.000,00</td><td>—</td></tr>
+                    <tr><td>Aluguel em 2026 (Atual)</td><td>R$ 91.485,00</td><td><span class="badge badge-green">+52,5%</span></td></tr>
+                    <tr><td>Aluguel em 2026 (Laudo)</td><td>R$ 23.200,00</td><td><span class="badge badge-red">−61,3%</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="hl hl-red">
+            <strong>Absurdo Econômico:</strong> É economicamente irracional que um imóvel comercial "prime" em Campo Grande, que valia R$ 60.000,00 em 2016, passe a valer R$ 23.200,00 em 2026. Isso representaria uma <strong>desvalorização de 61,3%</strong> em 10 anos — impossível para um ponto de primeira linha.
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     4. PESQUISA DE MERCADO
+══════════════════════════════════════════ -->
+<section id="mercado">
+    <div class="card">
+        <h2>📈 Pesquisa de Mercado</h2>
+
+        <div class="hl hl-green">
+            <strong>✅ Conclusão:</strong> Você cobra R$ 59,29/m² enquanto o mercado está em R$ 113,32/m². Você está <strong>47,7% abaixo do mercado</strong> e poderia cobrar até R$ 174.849,50/mês.
+        </div>
+
+        <h3>Estatísticas da Pesquisa</h3>
+        <div class="metrics-grid">
+            <div class="metric">
+                <div class="metric-value">8</div>
+                <div class="metric-label">Imóveis Pesquisados</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">R$ 113,32</div>
+                <div class="metric-label">Média R$/m²</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">404 m²</div>
+                <div class="metric-label">Metragem Média</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">R$ 36.688</div>
+                <div class="metric-label">Aluguel Médio</div>
+            </div>
+        </div>
+
+        <h3>Lista Completa — 8 Imóveis Verificados</h3>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Endereço</th>
+                        <th>Área</th>
+                        <th>Aluguel</th>
+                        <th>R$/m²</th>
+                        <th>Dist.</th>
+                        <th>Anúncio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Rua Ferreira Borges, 36</td>
+                        <td>1.000 m²</td>
+                        <td>R$ 70.000</td>
+                        <td>R$ 70,00</td>
+                        <td>~60m</td>
+                        <td><a href="https://www.instagram.com/p/DIRZcr1o0J4/" target="_blank">Ver</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Rua Ferreira Borges, 62</td>
+                        <td>507 m²</td>
+                        <td>R$ 30.000</td>
+                        <td>R$ 59,17</td>
+                        <td>~150m</td>
+                        <td><a href="https://www.instagram.com/reel/DOHUI5akm5Z/" target="_blank">Ver</a></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Av. Cesário de Melo, 2437</td>
+                        <td>500 m²</td>
+                        <td>R$ 35.000</td>
+                        <td>R$ 70,00</td>
+                        <td>~1,5km</td>
+                        <td><a href="https://www.sampaioimoveis.com.br/imovel/aluguel+loja+campo-grande+rio-de-janeiro+rj+500m2+rs35000/S0LJ8342" target="_blank">Ver</a></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Rua Aurélio Figueiredo, 00</td>
+                        <td>390 m²</td>
+                        <td>R$ 27.500</td>
+                        <td>R$ 70,51</td>
+                        <td>~450m</td>
+                        <td><a href="https://www.chavesnamao.com.br/imovel/ponto-comercial-para-alugar-rj-rio-de-janeiro-campo-grande-390m2-RS27500/id-32778596/" target="_blank">Ver</a></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Rua Coronel Agostinho, s/n</td>
+                        <td>270 m²</td>
+                        <td>R$ 43.000</td>
+                        <td>R$ 159,26</td>
+                        <td>~100m</td>
+                        <td><a href="https://www.chavesnamao.com.br/imovel/ponto-comercial-para-alugar-rj-rio-de-janeiro-campo-grande-RS43000/id-36391744/" target="_blank">Ver</a></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Rua Viúva Dantas, 35</td>
+                        <td>210 m²</td>
+                        <td>R$ 18.000</td>
+                        <td>R$ 85,71</td>
+                        <td>~550m</td>
+                        <td><a href="https://www.chavesnamao.com.br/imovel/ponto-comercial-para-alugar-rj-rio-de-janeiro-campo-grande-RS18000/id-15614663/" target="_blank">Ver</a></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Rua Viúva Dantas, s/n</td>
+                        <td>180 m²</td>
+                        <td>R$ 22.000</td>
+                        <td>R$ 122,22</td>
+                        <td>~100m</td>
+                        <td><a href="https://www.sampaioimoveis.com.br/imovel/aluguel+loja+campo-grande+rio-de-janeiro+rj+180m2+rs22000/S0LJ8347" target="_blank">Ver</a></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Rua Coronel Agostinho, 142</td>
+                        <td>178 m²</td>
+                        <td>R$ 48.000</td>
+                        <td>R$ 269,66</td>
+                        <td>~700m</td>
+                        <td><a href="https://www.chavesnamao.com.br/imovel/ponto-comercial-para-alugar-rj-rio-de-janeiro-campo-grande-RS48000/id-38861541/" target="_blank">Ver</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Gráfico Comparativo — R$/m²</h3>
+        <div id="chartContainer"></div>
+
+        <h3>TOP 5 — Melhores Custo-Benefício</h3>
+        <ol class="num-list">
+            <li><strong>Rua Ferreira Borges, 62</strong> — 507 m² por R$ 30.000 (R$ 59,17/m²)</li>
+            <li><strong>Rua Ferreira Borges, 36</strong> — 1.000 m² por R$ 70.000 (R$ 70,00/m²)</li>
+            <li><strong>Av. Cesário de Melo, 2437</strong> — 500 m² por R$ 35.000 (R$ 70,00/m²)</li>
+            <li><strong>Rua Aurélio Figueiredo, 00</strong> — 390 m² por R$ 27.500 (R$ 70,51/m²)</li>
+            <li><strong>Rua Viúva Dantas, 35</strong> — 210 m² por R$ 18.000 (R$ 85,71/m²)</li>
+        </ol>
+
+        <h3>TOP 5 — Mais Próximos do Imóvel Principal</h3>
+        <ol class="num-list">
+            <li><strong>Rua Ferreira Borges, 36</strong> — ~60m (1.000 m² / R$ 70,00/m²)</li>
+            <li><strong>Rua Coronel Agostinho, s/n</strong> — ~100m (270 m² / R$ 159,26/m²)</li>
+            <li><strong>Rua Viúva Dantas, s/n</strong> — ~100m (180 m² / R$ 122,22/m²)</li>
+            <li><strong>Rua Ferreira Borges, 62</strong> — ~150m (507 m² / R$ 59,17/m²)</li>
+            <li><strong>Rua Aurélio Figueiredo, 00</strong> — ~450m (390 m² / R$ 70,51/m²)</li>
+        </ol>
+
+        <h3>Observações Importantes</h3>
+        <ul>
+            <li>Todos os imóveis listados são <strong>lojas comerciais térreas</strong> ou pontos comerciais com acesso direto à rua.</li>
+            <li>Distâncias são aproximadas baseadas nos endereços em Campo Grande.</li>
+            <li>Valores e disponibilidade podem variar — recomenda-se contato direto com as imobiliárias.</li>
+            <li>Alguns imóveis podem ter custos adicionais (condomínio, IPTU) não inclusos no aluguel base.</li>
+            <li>Todos os links foram verificados e apontam para os anúncios originais.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     5. MAPA
+══════════════════════════════════════════ -->
+<section id="mapa">
+    <div class="card">
+        <h2>🗺️ Localização dos Imóveis</h2>
+        <p>Clique em um imóvel na lista ou no marcador do mapa para ver os detalhes.</p>
+
+        <div class="map-btns">
+            <button class="map-btn active" onclick="focusMap('main')">📍 Seu Imóvel</button>
+            <button class="map-btn" onclick="focusMap('all')">🗺️ Ver Todos</button>
+        </div>
+
+        <div id="mapContainer"></div>
+
+        <h3>Imóveis Pesquisados</h3>
+        <div class="prop-list">
+            <div class="prop-item main-prop" onclick="focusMap('main')">
+                <div class="prop-name">⭐ SEU IMÓVEL — Rua Ferreira Borges, 42</div>
+                <div class="prop-info">1.543 m² · R$ 91.485/mês · R$ 59,29/m² · 47,7% abaixo do mercado</div>
+            </div>
+            <div class="prop-item" onclick="focusMap('prop1')">
+                <div class="prop-name">Rua Ferreira Borges, 36</div>
+                <div class="prop-info">1.000 m² · R$ 70.000/mês · R$ 70,00/m² · ~60m</div>
+            </div>
+            <div class="prop-item" onclick="focusMap('prop2')">
+                <div class="prop-name">Rua Ferreira Borges, 62</div>
+                <div class="prop-info">507 m² · R$ 30.000/mês · R$ 59,17/m² · ~150m</div>
+            </div>
+            <div class="prop-item" onclick="focusMap('prop3')">
+                <div class="prop-name">Av. Cesário de Melo, 2437</div>
+                <div class="prop-info">500 m² · R$ 35.000/mês · R$ 70,00/m² · ~1,5km</div>
+            </div>
+            <div class="prop-item" onclick="focusMap('prop4')">
+                <div class="prop-name">Rua Coronel Agostinho, s/n</div>
+                <div class="prop-info">270 m² · R$ 43.000/mês · R$ 159,26/m² · ~100m</div>
+            </div>
+            <div class="prop-item" onclick="focusMap('prop5')">
+                <div class="prop-name">Rua Aurélio Figueiredo, 00</div>
+                <div class="prop-info">390 m² · R$ 27.500/mês · R$ 70,51/m² · ~450m</div>
+            </div>
+            <div class="prop-item" onclick="focusMap('prop6')">
+                <div class="prop-name">Rua Coronel Agostinho, 142</div>
+                <div class="prop-info">178 m² · R$ 48.000/mês · R$ 269,66/m² · ~700m</div>
+            </div>
+            <div class="prop-item" onclick="focusMap('prop7')">
+                <div class="prop-name">Rua Viúva Dantas, 35</div>
+                <div class="prop-info">210 m² · R$ 18.000/mês · R$ 85,71/m² · ~550m</div>
+            </div>
+            <div class="prop-item" onclick="focusMap('prop8')">
+                <div class="prop-name">Rua Viúva Dantas, s/n</div>
+                <div class="prop-info">180 m² · R$ 22.000/mês · R$ 122,22/m² · ~100m</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     6. ESTRATÉGIA DE DEFESA
+══════════════════════════════════════════ -->
+<section id="defesa">
+    <div class="card">
+        <h2>⚖️ Estratégia de Defesa</h2>
+
+        <div class="hl hl-blue">
+            <strong>Abordagem:</strong> Defesa agressiva na desconstrução do laudo do inquilino e firme na comprovação de que o valor atual (R$ 91.485,00) é o valor justo de mercado — ou até inferior a ele.
+        </div>
+
+        <h3>Peça de Contestação — 5 Pontos-Chave</h3>
+
+        <h3>1️⃣ Impugnação Total do Laudo FTC</h3>
+        <p>Requerer a desconsideração total do laudo particular juntado pelo autor, apontando os erros crassos:</p>
+        <ul>
+            <li><strong>Erro na Área (CRÍTICO):</strong> O laudo usou 1.093 m² quando a área real é 1.543 m² (redução de 29,2%). Juntar cópia da escritura comprovando a área real.</li>
+            <li><strong>Amostra Viciada:</strong> Apenas 9 imóveis, misturando características incompatíveis, com seleção tendenciosa de imóveis depreciados.</li>
+            <li><strong>Redutor Arbitrário:</strong> Desconto de 10% sem base técnica após o modelo estatístico — prática vedada pela NBR 14.653.</li>
+        </ul>
+
+        <h3>2️⃣ Apresentação da Pesquisa de Mercado Própria</h3>
+        <p>Juntar a pesquisa de mercado com 8 imóveis comerciais, comprovando que a média real da região é de <strong>R$ 113,32/m²</strong> — 7,5x acima do valor proposto pelo laudo.</p>
+
+        <h3>3️⃣ Demonstração do Valor Justo</h3>
+        <p>Mostrar que o aluguel atual (R$ 91.485,00 / 1.543 m² = R$ 59,29/m²) está <strong>47,7% ABAIXO da média de mercado</strong>. O proprietário está concedendo um desconto extraordinário.</p>
+
+        <h3>4️⃣ Histórico do Acordo de 2016</h3>
+        <p>Utilizar o acordo homologado de R$ 60.000,00 em 2016 como piso irredutível, demonstrando que o valor atual é apenas a recomposição inflacionária com evolução de +52,5% em 10 anos — absolutamente razoável.</p>
+
+        <h3>5️⃣ Pedido Contraposto</h3>
+        <p>Requerer a fixação do aluguel provisório no valor atual (R$ 91.485,00) ou, subsidiariamente, em 80% do valor atual, conforme <strong>art. 72, § 4º da Lei do Inquilinato</strong>, rechaçando o pedido liminar do autor de fixação em R$ 23.200,00.</p>
+
+        <h3>Argumentação Jurídica</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Fundamento</th><th>Argumento</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Lei 8.245/91, Art. 72</strong></td>
+                        <td>A renovação deve ser concedida, mas o aluguel deve ser fixado de acordo com o valor de mercado. Seu aluguel está abaixo do mercado.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Princípio da Boa-fé</strong></td>
+                        <td>O inquilino está tentando se beneficiar de um laudo viciado e manipulado. A boa-fé contratual não permite tal conduta.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NBR 14.653</strong></td>
+                        <td>O laudo descumpre a norma técnica ao aplicar redutor arbitrário e usar amostra incompatível com o imóvel avaliado.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Jurisprudência</strong></td>
+                        <td>Tribunais têm rejeitado laudos periciais que contêm erros primários como a medição incorreta de área.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     7. CONCLUSÃO
+══════════════════════════════════════════ -->
+<section id="conclusao">
+    <div class="card">
+        <h2>🏆 Conclusão</h2>
+
+        <div class="hl hl-green">
+            <strong>Posição:</strong> A tentativa do inquilino de reduzir o aluguel de R$ 91.485,00 para R$ 23.200,00 é baseada em um laudo pericial <strong>fabricado para atingir esse resultado</strong>, contendo erros primários e manipulação estatística.
+        </div>
+
+        <h3>Síntese dos Argumentos</h3>
+        <ol class="num-list">
+            <li>O laudo usou área de <strong>1.093 m²</strong> quando a área real é <strong>1.543 m²</strong> — redução indevida de 29,2%.</li>
+            <li>A amostra de 9 imóveis é tendenciosa e incompatível com o porte do imóvel avaliado.</li>
+            <li>O redutor de 10% foi aplicado arbitrariamente, sem base técnica na NBR 14.653.</li>
+            <li>A proposta de R$ 23.200,00 implica desvalorização de 61,3% desde 2016 — economicamente absurdo.</li>
+            <li>Nossa pesquisa com 8 imóveis comprova média real de <strong>R$ 113,32/m²</strong>.</li>
+            <li>Você cobra <strong>47,7% ABAIXO do mercado</strong> — está sendo extremamente generoso.</li>
+        </ol>
+
+        <h3>Cenários de Resultado</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Cenário</th><th>Aluguel</th><th>R$/m²</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Pedido do Inquilino</strong></td>
+                        <td>R$ 23.200,00</td>
+                        <td><span class="badge badge-red">R$ 15,04 (absurdo)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Aluguel Atual (Seu)</strong></td>
+                        <td>R$ 91.485,00</td>
+                        <td><span class="badge badge-green">R$ 59,29 (justo)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pela Média de Mercado</strong></td>
+                        <td>R$ 174.849,50</td>
+                        <td><strong>R$ 113,32 (mercado)</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="hl hl-green">
+            <strong>💪 Resultado Esperado:</strong> A defesa tem elementos técnicos e fáticos <strong>extremamente robustos</strong> para não apenas manter o valor atual, mas potencialmente pleitear um aumento, caso a perícia judicial confirme a média de mercado superior a R$ 70,00/m² (o que resultaria em aluguel de aproximadamente R$ 174.850,00).
+        </div>
+
+        <h3>Recomendação ao Advogado</h3>
+        <ul>
+            <li>Apresentar este documento juntamente com a <strong>cópia da escritura</strong> comprovando 1.543 m².</li>
+            <li>Juntar a pesquisa de mercado com os 8 imóveis e links dos anúncios verificados.</li>
+            <li>Impugnar o laudo FTC nos 4 pontos identificados.</li>
+            <li>Requerer fixação do aluguel provisório no valor atual (R$ 91.485,00).</li>
+        </ul>
+
+        <div class="hl hl-amber" style="margin-top: 1.5rem;">
+            <strong>📅 Documento preparado em:</strong> Maio de 2026<br>
+            <strong>👤 Proprietário/Réu:</strong> Paolo Giovanni Amendola<br>
+            <strong>🏢 Inquilino/Autor:</strong> Parco Comércio e Serviços Ltda (Caçula)
+        </div>
+    </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+    <p><strong>Defesa — Ação Renovatória | Rua Ferreira Borges, 42 | Campo Grande – RJ</strong></p>
+    <p>Documento preparado em Maio de 2026 · Uso exclusivo para fins jurídicos</p>
+</footer>
+
+<script>
+// ── NAVIGATION ──
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.section).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Init map when tab is opened
+        if (btn.dataset.section === 'mapa' && !mapInitialized) initMap();
+    });
+});
+
+// ── CHART ──
+const imoveis = [
+    {nome: "Ferreira Borges, 36",    preco: 70.00},
+    {nome: "Ferreira Borges, 62",    preco: 59.17},
+    {nome: "Cesário de Melo, 2437",  preco: 70.00},
+    {nome: "Aurélio Figueiredo, 00", preco: 70.51},
+    {nome: "Coronel Agostinho, s/n", preco: 159.26},
+    {nome: "Viúva Dantas, 35",       preco: 85.71},
+    {nome: "Viúva Dantas, s/n",      preco: 122.22},
+    {nome: "Coronel Agostinho, 142", preco: 269.66}
+];
+const media = 113.32;
+const seuImovel = 59.29;
+
+const colors = imoveis.map(i => i.preco > media ? '#dc2626' : '#2563eb');
+
+Plotly.newPlot('chartContainer', [
+    {
+        x: imoveis.map(i => i.nome),
+        y: imoveis.map(i => i.preco),
+        type: 'bar',
+        marker: { color: colors, line: { color: '#0f172a', width: 0.5 } },
+        text: imoveis.map(i => `R$ ${i.preco.toFixed(2)}`),
+        textposition: 'outside',
+        hovertemplate: '<b>%{x}</b><br>R$ %{y:.2f}/m²<extra></extra>',
+        name: 'Imóveis'
+    },
+    {
+        x: imoveis.map(i => i.nome),
+        y: Array(imoveis.length).fill(media),
+        type: 'scatter',
+        mode: 'lines',
+        line: { color: '#059669', width: 2.5, dash: 'dash' },
+        name: `Média: R$ ${media}/m²`,
+        hovertemplate: 'Média de Mercado: R$ %{y:.2f}/m²<extra></extra>'
+    },
+    {
+        x: imoveis.map(i => i.nome),
+        y: Array(imoveis.length).fill(seuImovel),
+        type: 'scatter',
+        mode: 'lines',
+        line: { color: '#b45309', width: 2.5, dash: 'dot' },
+        name: `Seu Imóvel: R$ ${seuImovel}/m²`,
+        hovertemplate: 'Seu Imóvel: R$ %{y:.2f}/m²<extra></extra>'
+    }
+], {
+    paper_bgcolor: '#ffffff',
+    plot_bgcolor: '#f8fafc',
+    font: { family: 'system-ui, sans-serif', size: 11 },
+    xaxis: { tickangle: -35, gridcolor: '#e2e8f0' },
+    yaxis: { title: 'R$/m²', gridcolor: '#e2e8f0', tickprefix: 'R$ ' },
+    margin: { b: 110, l: 70, r: 20, t: 30 },
+    legend: { orientation: 'h', y: -0.35 },
+    hovermode: 'x unified'
+}, { responsive: true, displayModeBar: false });
+
+// ── MAP ──
+let mapInitialized = false;
+let map, markers = {};
+
+const mainCoord = [-22.9019611, -43.5573585];
+const properties = [
+    { id: 'prop1', lat: -22.9019235, lng: -43.5578364, nome: 'Rua Ferreira Borges, 36',    area: '1.000 m²', aluguel: 'R$ 70.000/mês', preco: 'R$ 70,00/m²' },
+    { id: 'prop2', lat: -22.9019235, lng: -43.5574000, nome: 'Rua Ferreira Borges, 62',    area: '507 m²',   aluguel: 'R$ 30.000/mês', preco: 'R$ 59,17/m²' },
+    { id: 'prop3', lat: -22.8969678, lng: -43.5476403, nome: 'Av. Cesário de Melo, 2437',  area: '500 m²',   aluguel: 'R$ 35.000/mês', preco: 'R$ 70,00/m²' },
+    { id: 'prop4', lat: -22.9026028, lng: -43.5590080, nome: 'Rua Coronel Agostinho, s/n', area: '270 m²',   aluguel: 'R$ 43.000/mês', preco: 'R$ 159,26/m²' },
+    { id: 'prop5', lat: -22.9033277, lng: -43.5565603, nome: 'Rua Aurélio Figueiredo, 00', area: '390 m²',   aluguel: 'R$ 27.500/mês', preco: 'R$ 70,51/m²' },
+    { id: 'prop6', lat: -22.9043861, lng: -43.5594571, nome: 'Rua Coronel Agostinho, 142', area: '178 m²',   aluguel: 'R$ 48.000/mês', preco: 'R$ 269,66/m²' },
+    { id: 'prop7', lat: -22.9026271, lng: -43.5539142, nome: 'Rua Viúva Dantas, 35',       area: '210 m²',   aluguel: 'R$ 18.000/mês', preco: 'R$ 85,71/m²' },
+    { id: 'prop8', lat: -22.9026271, lng: -43.5535000, nome: 'Rua Viúva Dantas, s/n',      area: '180 m²',   aluguel: 'R$ 22.000/mês', preco: 'R$ 122,22/m²' }
+];
+
+function initMap() {
+    mapInitialized = true;
+    map = L.map('mapContainer').setView(mainCoord, 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+        maxZoom: 19
+    }).addTo(map);
+
+    // Main marker
+    const mainMarker = L.circleMarker(mainCoord, {
+        radius: 16, fillColor: '#059669', color: '#065f46',
+        weight: 3, opacity: 1, fillOpacity: 0.9
+    }).addTo(map);
+    mainMarker.bindPopup(
+        '<b style="font-size:1rem">⭐ SEU IMÓVEL</b><br>' +
+        '<b>Rua Ferreira Borges, 42</b><br>' +
+        '📐 1.543 m² &nbsp;|&nbsp; 💰 R$ 91.485/mês<br>' +
+        '<span style="color:#059669;font-weight:700">R$ 59,29/m² — 47,7% abaixo do mercado</span>'
+    );
+    markers['main'] = mainMarker;
+
+    // Other markers
+    properties.forEach(p => {
+        const m = L.circleMarker([p.lat, p.lng], {
+            radius: 9, fillColor: '#2563eb', color: '#1e3a8a',
+            weight: 2, opacity: 1, fillOpacity: 0.75
         }).addTo(map);
+        m.bindPopup(
+            `<b>${p.nome}</b><br>` +
+            `📐 ${p.area} &nbsp;|&nbsp; 💰 ${p.aluguel}<br>` +
+            `<strong>${p.preco}</strong>`
+        );
+        markers[p.id] = m;
+    });
+}
 
-        const properties = [
-            {lat: -22.9019235, lng: -43.5578364, nome: 'Rua Ferreira Borges, 36', area: '1.000 m²', preco: 'R$ 70,00/m²', aluguel: 'R$ 70.000/mês', id: 'prop1'},
-            {lat: -22.9019235, lng: -43.5574000, nome: 'Rua Ferreira Borges, 62', area: '507 m²', preco: 'R$ 59,17/m²', aluguel: 'R$ 30.000/mês', id: 'prop2'},
-            {lat: -22.8969678, lng: -43.5476403, nome: 'Av. Cesário de Melo, 2437', area: '500 m²', preco: 'R$ 70,00/m²', aluguel: 'R$ 35.000/mês', id: 'prop3'},
-            {lat: -22.9026028, lng: -43.5590080, nome: 'Rua Coronel Agostinho, s/n', area: '270 m²', preco: 'R$ 159,26/m²', aluguel: 'R$ 43.000/mês', id: 'prop4'},
-            {lat: -22.9033277, lng: -43.5565603, nome: 'Rua Aurélio Figueiredo, 00', area: '390 m²', preco: 'R$ 70,51/m²', aluguel: 'R$ 27.500/mês', id: 'prop5'},
-            {lat: -22.9043861, lng: -43.5594571, nome: 'Rua Coronel Agostinho, 142', area: '178 m²', preco: 'R$ 269,66/m²', aluguel: 'R$ 48.000/mês', id: 'prop6'},
-            {lat: -22.9026271, lng: -43.5539142, nome: 'Rua Viúva Dantas, 35', area: '210 m²', preco: 'R$ 85,71/m²', aluguel: 'R$ 18.000/mês', id: 'prop7'},
-            {lat: -22.9026271, lng: -43.5535000, nome: 'Rua Viúva Dantas, s/n', area: '180 m²', preco: 'R$ 122,22/m²', aluguel: 'R$ 22.000/mês', id: 'prop8'}
-        ];
+window.focusMap = function(id) {
+    if (!mapInitialized) initMap();
+    document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
 
-        let markers = {};
-
-        // Main property
-        const mainMarker = L.circleMarker([-22.9019611, -43.5573585], {
-            radius: 14,
-            fillColor: '#10b981',
-            color: '#059669',
-            weight: 3,
-            opacity: 1,
-            fillOpacity: 0.9
-        }).addTo(map);
-        mainMarker.bindPopup('<b>⭐ SEU IMÓVEL</b><br><b>Rua Ferreira Borges, 42</b><br>📐 1.543 m² | 💰 R$ 91.485/mês<br><strong>R$ 59,29/m² — 47,7% abaixo do mercado</strong>');
-        markers['main'] = mainMarker;
-
-        // Other properties
-        properties.forEach(prop => {
-            const marker = L.circleMarker([prop.lat, prop.lng], {
-                radius: 8,
-                fillColor: '#3b82f6',
-                color: '#1e40af',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.7
-            }).addTo(map);
-            marker.bindPopup(`<b>${prop.nome}</b><br>📐 ${prop.area}<br>💰 ${prop.aluguel}<br><strong>${prop.preco}</strong>`);
-            markers[prop.id] = marker;
-        });
-
-        // Property list
-        const propertyList = document.getElementById('propertyList');
-        properties.forEach(prop => {
-            const item = document.createElement('div');
-            item.className = 'property-item';
-            item.innerHTML = `
-                <div class="property-name">${prop.nome}</div>
-                <div class="property-info">${prop.area} • ${prop.preco}</div>
-            `;
-            item.onclick = () => {
-                map.setView([prop.lat, prop.lng], 16);
-                markers[prop.id].openPopup();
-            };
-            propertyList.appendChild(item);
-        });
-
-        // Map focus function
-        window.focusProperty = function(type) {
-            const buttons = document.querySelectorAll('.map-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            if (type === 'main') {
-                map.setView([-22.9019611, -43.5573585], 17);
-                mainMarker.openPopup();
-                buttons[0].classList.add('active');
-            } else if (type === 'all') {
-                map.fitBounds(L.latLngBounds([
-                    [-22.9050, -43.5600],
-                    [-22.8960, -43.5460]
-                ]));
-                buttons[1].classList.add('active');
-            }
-        };
-    </script>
+    if (id === 'main') {
+        map.setView(mainCoord, 17);
+        markers['main'].openPopup();
+        document.querySelectorAll('.map-btn')[0].classList.add('active');
+    } else if (id === 'all') {
+        map.fitBounds(L.latLngBounds([[-22.9050, -43.5600], [-22.8960, -43.5460]]), { padding: [20, 20] });
+        document.querySelectorAll('.map-btn')[1].classList.add('active');
+    } else {
+        const prop = properties.find(p => p.id === id);
+        if (prop) {
+            map.setView([prop.lat, prop.lng], 17);
+            markers[id].openPopup();
+        }
+    }
+};
+</script>
 </body>
 </html>
