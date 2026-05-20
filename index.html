@@ -811,27 +811,27 @@
         Plotly.newPlot('chartContainer', [trace], layout, {responsive: true});
 
         // Map
-        const map = L.map('mapContainer').setView([-23.0145, -43.4361], 15);
+        const map = L.map('mapContainer').setView([-22.9019611, -43.5573585], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap',
             maxZoom: 19
         }).addTo(map);
 
         const properties = [
-            {lat: -23.0148, lng: -43.4355, nome: 'Rua Ferreira Borges, 36', area: '1.000 m²', preco: 'R$ 70,00/m²', id: 'prop1'},
-            {lat: -23.0142, lng: -43.4350, nome: 'Rua Ferreira Borges, 62', area: '507 m²', preco: 'R$ 59,17/m²', id: 'prop2'},
-            {lat: -23.0170, lng: -43.4390, nome: 'Av. Cesário de Melo, 2437', area: '500 m²', preco: 'R$ 70,00/m²', id: 'prop3'},
-            {lat: -23.0150, lng: -43.4360, nome: 'Rua Coronel Agostinho, s/n', area: '270 m²', preco: 'R$ 159,26/m²', id: 'prop4'},
-            {lat: -23.0155, lng: -43.4365, nome: 'Rua Aurélio Figueiredo, 00', area: '390 m²', preco: 'R$ 70,51/m²', id: 'prop5'},
-            {lat: -23.0160, lng: -43.4375, nome: 'Rua Coronel Agostinho, 142', area: '178 m²', preco: 'R$ 269,66/m²', id: 'prop6'},
-            {lat: -23.0150, lng: -43.4360, nome: 'Rua Viúva Dantas, 35', area: '210 m²', preco: 'R$ 85,71/m²', id: 'prop7'},
-            {lat: -23.0143, lng: -43.4348, nome: 'Rua Viúva Dantas, s/n', area: '180 m²', preco: 'R$ 122,22/m²', id: 'prop8'}
+            {lat: -22.9019235, lng: -43.5578364, nome: 'Rua Ferreira Borges, 36', area: '1.000 m²', preco: 'R$ 70,00/m²', aluguel: 'R$ 70.000/mês', id: 'prop1'},
+            {lat: -22.9019235, lng: -43.5574000, nome: 'Rua Ferreira Borges, 62', area: '507 m²', preco: 'R$ 59,17/m²', aluguel: 'R$ 30.000/mês', id: 'prop2'},
+            {lat: -22.8969678, lng: -43.5476403, nome: 'Av. Cesário de Melo, 2437', area: '500 m²', preco: 'R$ 70,00/m²', aluguel: 'R$ 35.000/mês', id: 'prop3'},
+            {lat: -22.9026028, lng: -43.5590080, nome: 'Rua Coronel Agostinho, s/n', area: '270 m²', preco: 'R$ 159,26/m²', aluguel: 'R$ 43.000/mês', id: 'prop4'},
+            {lat: -22.9033277, lng: -43.5565603, nome: 'Rua Aurélio Figueiredo, 00', area: '390 m²', preco: 'R$ 70,51/m²', aluguel: 'R$ 27.500/mês', id: 'prop5'},
+            {lat: -22.9043861, lng: -43.5594571, nome: 'Rua Coronel Agostinho, 142', area: '178 m²', preco: 'R$ 269,66/m²', aluguel: 'R$ 48.000/mês', id: 'prop6'},
+            {lat: -22.9026271, lng: -43.5539142, nome: 'Rua Viúva Dantas, 35', area: '210 m²', preco: 'R$ 85,71/m²', aluguel: 'R$ 18.000/mês', id: 'prop7'},
+            {lat: -22.9026271, lng: -43.5535000, nome: 'Rua Viúva Dantas, s/n', area: '180 m²', preco: 'R$ 122,22/m²', aluguel: 'R$ 22.000/mês', id: 'prop8'}
         ];
 
         let markers = {};
 
         // Main property
-        const mainMarker = L.circleMarker([-23.0145, -43.4361], {
+        const mainMarker = L.circleMarker([-22.9019611, -43.5573585], {
             radius: 14,
             fillColor: '#10b981',
             color: '#059669',
@@ -839,7 +839,7 @@
             opacity: 1,
             fillOpacity: 0.9
         }).addTo(map);
-        mainMarker.bindPopup('<b>SEU IMÓVEL</b><br>Rua Ferreira Borges, 42<br>1.543 m² | R$ 91.485/mês<br><strong>R$ 59,29/m²</strong>');
+        mainMarker.bindPopup('<b>⭐ SEU IMÓVEL</b><br><b>Rua Ferreira Borges, 42</b><br>📐 1.543 m² | 💰 R$ 91.485/mês<br><strong>R$ 59,29/m² — 47,7% abaixo do mercado</strong>');
         markers['main'] = mainMarker;
 
         // Other properties
@@ -852,7 +852,7 @@
                 opacity: 1,
                 fillOpacity: 0.7
             }).addTo(map);
-            marker.bindPopup(`<b>${prop.nome}</b><br>${prop.area}<br>${prop.preco}`);
+            marker.bindPopup(`<b>${prop.nome}</b><br>📐 ${prop.area}<br>💰 ${prop.aluguel}<br><strong>${prop.preco}</strong>`);
             markers[prop.id] = marker;
         });
 
@@ -878,13 +878,13 @@
             buttons.forEach(btn => btn.classList.remove('active'));
             
             if (type === 'main') {
-                map.setView([-23.0145, -43.4361], 16);
+                map.setView([-22.9019611, -43.5573585], 17);
                 mainMarker.openPopup();
                 buttons[0].classList.add('active');
             } else if (type === 'all') {
                 map.fitBounds(L.latLngBounds([
-                    [-23.0170, -43.4390],
-                    [-23.0140, -43.4340]
+                    [-22.9050, -43.5600],
+                    [-22.8960, -43.5460]
                 ]));
                 buttons[1].classList.add('active');
             }
